@@ -14,7 +14,7 @@
   "keywords": [],
   "author": "Adam Whitehurst",
   "license": "MIT",
-  "homepage": "./",
+  "homepage": ".",
   "config": {
     "forge": {
       "make_targets": {
