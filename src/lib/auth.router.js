@@ -5,9 +5,14 @@ const passport = require("passport");
 const authController = (req, res) => {
   const io = req.app.get("io");
   const user = {
-    name: req.user.username,
-    photo: req.user.photos[0].value.replace(/_normal/, "")
+    accessToken: req.user.accessToken,
+    tokenSecret: req.user.tokenSecret,
+    profile: Object.assign(
+      { photos: req.user.profile.photos[0].value.replace(/_normal/, "") },
+      req.user.profile
+    )
   };
+  console.log(user);
   io.in(req.session.socketId).emit("twitter", user);
 };
 
@@ -22,10 +27,10 @@ const addSocketIdtoSession = (req, res, next) => {
 };
 
 // Routes that are triggered by the React client
-router.get("/twitter", addSocketIdtoSession, twitterAuth);
+router.get("/", addSocketIdtoSession, twitterAuth);
 
 // Routes that are triggered by callbacks from OAuth providers once
 // the user has authenticated successfully
-router.get("/twitter/callback", twitterAuth, authController);
+router.get("/callback", twitterAuth, authController);
 
 module.exports = router;
