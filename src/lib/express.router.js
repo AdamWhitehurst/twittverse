@@ -1,5 +1,5 @@
 const dotenv = require("dotenv");
-const env = dotenv.config({ path: "src/lib/.env" });
+const env = dotenv.config({ path: "./src/lib/.env" });
 const http = require("http");
 const passport = require("passport");
 const session = require("express-session");
@@ -33,7 +33,7 @@ exp.use(
 const io = socketio(server);
 exp.set("io", io);
 
-exp.use("/", authRouter);
+exp.use("/twitter", authRouter);
 
 server.listen(process.env.PORT || 8080, () => {
   console.log("tuning into 8080!");
