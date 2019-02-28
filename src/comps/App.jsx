@@ -1,12 +1,16 @@
 import React from "react";
 import MUITheme from "../utils/theme";
-import { MuiThemeProvider } from "@material-ui/core/styles";
-import withOAuth from "./OAuth";
+import { MuiThemeProvider, withStyles } from "@material-ui/core/styles";
 import Grid from "./Grid";
 import AppBar from "./AppBar";
-import Card from "./Card";
+import UserCard from "./UserCard";
 
-const OAuthCard = withOAuth(Card);
+const styles = {
+  app: {
+    display: "flex",
+    height: "100vh"
+  }
+};
 
 class App extends React.Component {
   constructor() {
@@ -16,15 +20,18 @@ class App extends React.Component {
     };
   }
   render() {
+    const { classes } = this.props;
     return (
-      <MuiThemeProvider theme={MUITheme}>
-        <AppBar onExit={this.exitApp} />
-        <Grid>
-          <OAuthCard />
-        </Grid>
-      </MuiThemeProvider>
+      <div className={classes.app}>
+        <MuiThemeProvider theme={MUITheme}>
+          <AppBar onExit={this.exitApp} />
+          <Grid>
+            <UserCard />
+          </Grid>
+        </MuiThemeProvider>
+      </div>
     );
   }
 }
 
-export default App;
+export default withStyles(styles)(App);
