@@ -12,7 +12,6 @@ const authController = (req, res) => {
       req.user.profile
     )
   };
-  console.log(user);
   io.in(req.session.socketId).emit("twitter", user);
 };
 
