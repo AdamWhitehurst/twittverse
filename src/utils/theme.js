@@ -1,21 +1,31 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 
-const MUITheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#607d8b"
-    },
-    secondary: {
-      main: "#e0e0e0"
-    }
+const palette = {
+  primary: {
+    main: "#607d8b",
+    light: "#8eacbb",
+    dark: "#34515e",
+    contrastText: "#000000"
   },
+  secondary: {
+    main: "#e0e0e0",
+    light: "#ffffff",
+    dark: "#aeaeae",
+    contrastText: "#000000"
+  }
+};
+
+const MUITheme = createMuiTheme({
+  palette: palette,
   overrides: {
     // Name of the component ⚛️ / style sheet
     MuiButton: {
       // Name of the rule
       text: {
         // Some CSS
-        background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+        background: `linear-gradient(45deg, ${palette.primary.main} 30%, ${
+          palette.primary.dark
+        } 90%)`,
         borderRadius: 3,
         border: 0,
         color: "white",
