@@ -37,7 +37,7 @@ export default class TwittSocket extends React.Component {
   getTimeline() {
     this.state.twit.get(
       "statuses/user_timeline",
-      { user_id: this.state.user.profile.id },
+      { user_id: this.state.user.profile.id, tweet_mode: "extended" },
       this.setTimeline.bind(this)
     );
   }
