@@ -2,23 +2,24 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import ClearIcon from "@material-ui/icons/Clear";
-import MenuIcon from "@material-ui/icons/Menu";
+import MinimizeIcon from "@material-ui/icons/Remove";
 
 const styles = theme => ({
-  root: {
-    minHeight: 48,
-    WebkitAppRegion: "drag",
-    backgroundColor: theme.palette.primary.main,
-    flexGrow: 1
-  },
-  grow: {
-    flexGrow: 1
+  appbar: {
+    WebkitAppRegion: "drag"
   },
   toolbar: {
-    WebkitAppRegion: "drag"
+    display: "flex",
+    flexDirection: "row-reverse",
+    padding: 0,
+    minHeight: 0,
+    maxHeight: 20,
+    WebkitAppRegion: "drag",
+    background: `linear-gradient(45deg, ${theme.palette.primary.dark} 10%, ${
+      theme.palette.primary.main
+    } 100%)`
   },
   menuButton: {
     WebkitAppRegion: "no-drag",
@@ -28,40 +29,38 @@ const styles = theme => ({
   exitButton: {
     WebkitAppRegion: "no-drag",
     float: "right",
+    minHeight: 0,
+    maxHeight: 20,
+    padding: 2,
     marginLeft: theme.spacing.unit / 10,
     marginRight: theme.spacing.unit / 10
+  },
+  icon: {
+    fontSize: "1rem"
   }
 });
 
 function UnstyledAppBar(props) {
-  const { classes, onExit } = props;
+  const { classes, onExit, onMinimize } = props;
   return (
-    <div id="root" className={classes.root}>
-      <AppBar position="fixed">
-        <Toolbar variant="dense" className={classes.toolbar}>
-          <IconButton
-            disableRipple
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Menu"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            Twittverse
-          </Typography>
-          <IconButton
-            disableRipple
-            className={classes.exitButton}
-            color="inherit"
-            aria-label="Exit"
-            onClick={onExit}
-          >
-            <ClearIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-    </div>
+    <AppBar position="fixed" className={classes.appbar}>
+      <Toolbar variant="dense" className={classes.toolbar}>
+        <IconButton
+          className={classes.exitButton}
+          aria-label="Exit"
+          onClick={onExit}
+        >
+          <ClearIcon fontSize="small" className={classes.icon} />
+        </IconButton>
+        <IconButton
+          className={classes.exitButton}
+          aria-label="Minimize"
+          onClick={onMinimize}
+        >
+          <MinimizeIcon fontSize="small" className={classes.icon} />
+        </IconButton>
+      </Toolbar>
+    </AppBar>
   );
 }
 
