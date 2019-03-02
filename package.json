@@ -59,12 +59,14 @@
     "express-session": "^1.15.6",
     "passport": "^0.4.0",
     "passport-twitter": "^1.0.4",
+    "portfinder": "^1.0.20",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-hot-loader": "^4.7.1",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
-    "twit": "^2.2.11"
+    "twit": "^2.2.11",
+    "underscore": "^1.9.1"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
