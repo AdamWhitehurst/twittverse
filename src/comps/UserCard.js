@@ -1,13 +1,22 @@
 import React from "react";
 import TwittSocket from "./TwittSocket";
-import { List, ListItem } from "@material-ui/core";
 import {
+  UserCardView,
+  HorizontalGroup,
+  VerticalGroup,
+  UserPhoto,
   TweetCard,
+  TweetDivider,
+  EmptyView,
   TweetButton,
   MiniButton,
   ButtonText,
   TweetText,
-  DisplayText
+  DisplayText,
+  DisplayTextSmall,
+  Subtitle,
+  TweetListItem,
+  TweetList
 } from "./TweetCardParts";
 
 /**
@@ -30,45 +39,70 @@ function UserCard(props) {
         `<a class="external-link" href="javascript:void(0);" onclick="require('electron').shell.openExternal('https://twitter.com/$&');">$&</a>`
       );
 
-  const tweetTextToTypography = tweetText => (
-    // Parse text of tweet into a pretty.
-    <TweetText>{textToHTMLLink(tweetText)}</TweetText>
-  );
+  const bigImage = imgText => imgText.replace("_normal.jpg", ".jpg");
+  const julianToDate = dateText => new Date(dateText).toDateString();
 
   const renderLoginButton = socket => (
-    <TweetCard>
+    <EmptyView>
       <TweetButton onClick={socket.login}>
         <ButtonText>Connect Account</ButtonText>
       </TweetButton>
-    </TweetCard>
+    </EmptyView>
   );
 
   const tweetToListItem = tweet => (
     // Parse tweet into a pretty.
-    <ListItem key={tweet.id}>{tweetTextToTypography(tweet.full_text)}</ListItem>
+    <TweetListItem key={tweet.id}>
+      <HorizontalGroup>
+        <UserPhoto src={bigImage(tweet.user.profile_image_url)} />
+        <VerticalGroup>
+          <DisplayTextSmall>{tweet.user.name}</DisplayTextSmall>
+          <Subtitle>{julianToDate(tweet.created_at)}</Subtitle>
+        </VerticalGroup>
+      </HorizontalGroup>
+      {/* Parse text of tweet into a pretty. */}
+      <TweetText>{textToHTMLLink(tweet.full_text)}</TweetText>
+      <TweetDivider />
+    </TweetListItem>
   );
-  const renderUserTitle = socket => (
-    <div>
-      <DisplayText>{socket.user.profile.displayName}</DisplayText>
-      <MiniButton onClick={socket.logout}>
-        <ButtonText>Logout</ButtonText>
-      </MiniButton>
-    </div>
+  const renderUserHeader = socket => (
+    <HorizontalGroup>
+      <UserPhoto big src={bigImage(socket.user.profile.photos[0].value)} />
+      <VerticalGroup>
+        <DisplayText>{socket.user.profile.displayName}</DisplayText>
+        <MiniButton onClick={socket.logout}>
+          <ButtonText>Logout</ButtonText>
+        </MiniButton>
+        <TweetDivider />
+      </VerticalGroup>
+      <TweetDivider />
+    </HorizontalGroup>
   );
-  const renderTimeline = timeline =>
-    // For each tweet, if retweeted, parse that.
-    timeline.map(tweet =>
-      tweet.retweeted
-        ? tweetToListItem(tweet.retweeted_status)
-        : tweetToListItem(tweet)
-    );
-  const renderUser = socket => (
-    <TweetCard>
-      {renderUserTitle(socket)}
-      {socket.timeline && (
-        <List subheader={<ListItem />}>{renderTimeline(socket.timeline)}</List>
+  const renderSocketError = error => (
+    <HorizontalGroup>
+      {/** String literal doesn't work here? */}
+      <DisplayText>{"Error: " + error.message}</DisplayText>
+    </HorizontalGroup>
+  );
+
+  const renderTimeline = timeline => (
+    // For each tweet, if retweeted, parse that instead.
+    <TweetList>
+      {timeline.map(tweet =>
+        tweet.retweeted
+          ? tweetToListItem(tweet.retweeted_status.user)
+          : tweetToListItem(tweet)
       )}
-    </TweetCard>
+    </TweetList>
+  );
+  const renderUser = socket => (
+    <UserCardView>
+      {renderUserHeader(socket)}
+      {socket.error !== null && renderSocketError(socket.error)}
+      {socket.timeline !== null &&
+        socket.timeline !== undefined &&
+        renderTimeline(socket.timeline)}
+    </UserCardView>
   );
 
   return (
