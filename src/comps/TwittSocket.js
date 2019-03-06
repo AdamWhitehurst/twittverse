@@ -1,8 +1,18 @@
 import React from "react";
 import io from "socket.io-client";
-import { API_URL, TWITTER_SECRET, TWITTER_KEY } from "../lib/config";
+import {
+  API_URL,
+  TWITTER_SECRET,
+  TWITTER_KEY,
+  ACCESS_TOKEN,
+  ACCESS_TOKEN_SECRET
+} from "../lib/config";
 import Twit from "twit";
 import { union, uniq, property } from "underscore";
+
+const defaultParams = {
+  tweet_mode: "extended"
+};
 
 export default class TwittSocket extends React.Component {
   constructor(props) {
@@ -10,80 +20,97 @@ export default class TwittSocket extends React.Component {
     this.socket = io(API_URL);
     this.state = {
       user: null,
-      twit: null,
       error: null,
       timeline: null,
       disabled: false,
       login: this.startAuth.bind(this),
-      logout: this.closeUser.bind(this)
+      logout: this.resetState.bind(this),
+      search: this.search.bind(this),
+      getUserTweets: this.getUserTweets.bind(this)
     };
-    this.setTimeline = this.setTimeline.bind(this);
-    this.getNewTweets = this.getNewTweets.bind(this);
-    this.initTimelinePoll = this.initTimelinePoll.bind(this);
-    this.resetState = this.resetState.bind(this);
-  }
 
-  resetState() {
-    this.setState({ user: null, twit: null, timeline: null, error: null });
+    this.getTwit = this.getTwit.bind(this);
+    this.resetState = this.resetState.bind(this);
+    this.getUserTweets = this.getUserTweets.bind(this);
+    this.searchUser = this.searchUser.bind(this);
+    this.setTimeline = this.setTimeline.bind(this);
+    this.checkPopup = this.checkPopup.bind(this);
+    this.openPopup = this.openPopup.bind(this);
+    this.startAuth = this.startAuth.bind(this);
   }
 
   componentDidMount() {
     this.socket.on("twitter", user => {
       this.popup.close();
-      this.setState({ user }, this.initTwit);
+      this.setState({ user }, this.getUserTweets);
     });
   }
 
-  initTwit() {
-    let twit = new Twit({
+  resetState() {
+    this.setState({
+      user: null,
+      timeline: null,
+      error: null
+    });
+  }
+
+  getTwit() {
+    let at = this.state.user ? this.state.user.accessToken : ACCESS_TOKEN;
+    let ts = this.state.user
+      ? this.state.user.tokenSecret
+      : ACCESS_TOKEN_SECRET;
+
+    return new Twit({
       consumer_key: TWITTER_KEY,
       consumer_secret: TWITTER_SECRET,
-      access_token: this.state.user.accessToken,
-      access_token_secret: this.state.user.tokenSecret,
+      access_token: at,
+      access_token_secret: ts,
       timeout_ms: 60 * 1000
     });
-    this.setState({ twit }, this.initTimelinePoll);
   }
 
-  initTimelinePoll() {
-    console.debug(this.state.user);
-    this.getNewTweets();
-    this.pollTimeline = setInterval(this.getNewTweets, 10000);
-  }
-
-  getNewTweets() {
-    this.state.twit.get(
+  getUserTweets() {
+    this.getTwit().get(
       "statuses/home_timeline",
-      {
-        user_id: this.state.user.profile.id,
-        since_id: this.state.latestID,
-        tweet_mode: "extended"
-      },
+      defaultParams,
+      this.setTimeline
+    );
+  }
+
+  search(term, count) {
+    this.getTwit().get(
+      "search/tweets",
+      Object.assign({ q: term, count: count }, defaultParams),
+      this.setTimeline
+    );
+  }
+
+  searchUser(name, count) {
+    this.getTwit().get(
+      "search/tweets",
+      Object.assign({ screen_name: name, count: count }, defaultParams),
       this.setTimeline
     );
   }
 
   setTimeline(err, data, resp) {
     // let err = [{ message: "Sorry, that page does not exist", code: 34 }];
+    if (data.statuses) data = data.statuses;
+
     if (err) {
       console.debug("Timeline", err);
       this.setState({ error: err });
     } else {
-      console.debug("Timeline data:", data);
       this.setState(prevState => {
         // Compose the unique union of the old timeline and the new data
         // using their id properties
         let newTL = uniq(
-          union(prevState.timeline, data),
+          union(data, prevState.timeline),
           false,
-          property("id")
+          property("id_str")
         );
-        let latestID = newTL[0].id;
-        let oldestID = newTL[newTL.length - 1].id;
-        console.debug("New timeline:", newTL.length, latestID, oldestID);
+        console.debug("New timeline:", newTL);
         return {
-          latestID: latestID,
-          oldestID: oldestID,
           timeline: newTL,
           error: null
         };
@@ -123,10 +150,6 @@ export default class TwittSocket extends React.Component {
       this.checkPopup();
       this.setState({ disabled: true });
     }
-  }
-  closeUser() {
-    if (this.pollTimeline !== undefined) clearInterval(this.pollTimeline);
-    this.resetState();
   }
 
   render() {

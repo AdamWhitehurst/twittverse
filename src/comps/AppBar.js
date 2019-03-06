@@ -1,10 +1,14 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
 import ClearIcon from "@material-ui/icons/Clear";
 import MinimizeIcon from "@material-ui/icons/Remove";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton
+} from "@material-ui/core";
 
 const styles = theme => ({
   appbar: {
@@ -19,6 +23,16 @@ const styles = theme => ({
     WebkitAppRegion: "drag",
     background: `linear-gradient(45deg, ${theme.palette.primary.dark} 10%, ${
       theme.palette.primary.main
+    } 100%)`
+  },
+  headerbar: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    padding: 0,
+    minHeight: 0,
+    maxHeight: 20,
+    background: `linear-gradient(45deg, ${theme.palette.secondary.light} 10%, ${
+      theme.palette.secondary.main
     } 100%)`
   },
   menuButton: {
@@ -37,13 +51,38 @@ const styles = theme => ({
   },
   icon: {
     fontSize: "1rem"
+  },
+  headerButton: {
+    WebkitAppRegion: "no-drag",
+    margin: 0,
+    padding: 0
+  },
+  headerText: {
+    borderRadius: 0,
+    border: 0,
+    fontWeight: "bold",
+    color: theme.palette.primary.dark,
+    padding: 0
   }
 });
 
-function UnstyledAppBar(props) {
-  const { classes, onExit, onMinimize } = props;
+function TopBar(props) {
+  const { classes, onExit, onMinimize, headerButtons } = props;
+
+  const renderHeaderButtons = buttons =>
+    buttons.map(btn => (
+      <Button
+        key={btn.text}
+        className={classes.headerButton}
+        aria-label={btn.text}
+        onClick={btn.onClick}
+      >
+        <Typography className={classes.headerText}>{btn.text}</Typography>
+      </Button>
+    ));
+
   return (
-    <AppBar position="fixed" className={classes.appbar}>
+    <AppBar position="relative" className={classes.appbar}>
       <Toolbar variant="dense" className={classes.toolbar}>
         <IconButton
           className={classes.exitButton}
@@ -60,8 +99,11 @@ function UnstyledAppBar(props) {
           <MinimizeIcon fontSize="small" className={classes.icon} />
         </IconButton>
       </Toolbar>
+      <Toolbar variant="dense" className={classes.headerbar}>
+        {renderHeaderButtons(headerButtons)}
+      </Toolbar>
     </AppBar>
   );
 }
 
-export default withStyles(styles)(UnstyledAppBar);
+export default withStyles(styles)(TopBar);

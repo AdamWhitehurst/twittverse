@@ -2,7 +2,14 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
-import { Typography, Divider, Avatar, List, ListItem } from "@material-ui/core";
+import {
+  Typography,
+  Divider,
+  Avatar,
+  List,
+  ListItem,
+  TextField
+} from "@material-ui/core";
 
 const styles = theme => ({
   userCard: {
@@ -73,6 +80,10 @@ const styles = theme => ({
     position: "relative",
     overflow: "scroll",
     maxHeight: "84vh"
+  },
+  input: {
+    paddingLeft: theme.spacing.unit,
+    flexGrow: 1
   }
 });
 
@@ -89,6 +100,10 @@ export const EmptyView = withStyles(styles)(({ children, classes }) => (
     {children}
   </Card>
 ));
+
+export const Input = withStyles(styles)(({ onChange, classes }) => (
+  <TextField className={classes.input} onChange={onChange} />
+));
 export const UserPhoto = withStyles(styles)(({ src, big, classes }) =>
   big !== undefined ? (
     <Avatar className={classes.bigAvatar} src={src} />
@@ -97,7 +112,7 @@ export const UserPhoto = withStyles(styles)(({ src, big, classes }) =>
   )
 );
 export const TweetDivider = withStyles(styles)(({ classes }) => (
-  <Divider variant="fullWidth" className={classes.divider} />
+  <Divider variant="fullWidth" />
 ));
 
 export const UserCardView = withStyles(styles)(({ children, classes }) => (
@@ -163,11 +178,11 @@ export const Subtitle = withStyles(styles)(({ classes, children }) => (
   <Typography variant="subtitle2">{children}</Typography>
 ));
 
-export const TweetListItem = withStyles(styles)(({ classes, children }) => (
+export const TweetItem = withStyles(styles)(({ classes, children }) => (
   <ListItem className={classes.listItem}>{children}</ListItem>
 ));
-export const TweetList = withStyles(styles)(({ classes, children }) => (
-  <List className={classes.list} subheader={<TweetListItem />}>
+export const TweetItemList = withStyles(styles)(({ classes, children }) => (
+  <List className={classes.list} subheader={<TweetItem />}>
     {children}
   </List>
 ));
