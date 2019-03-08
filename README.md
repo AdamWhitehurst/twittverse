@@ -11,7 +11,7 @@
   <img src="/imgs/Twittverse-0.3.0-2.png" height="300" width="200" />
   <img src="/imgs/Twittverse-0.3.0-3.png" height="300" width="200" />
   
-  <p>
+  <p align="justify">
   <b>Current features:</b>
   <br>
   1. Sign in to view your home timeline on the Profile screen
