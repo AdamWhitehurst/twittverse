@@ -12,10 +12,14 @@
   <img src="/imgs/Twittverse-0.3.0-3.png" height="300" width="200" />
   
   <p>
-  Current features:
+  <b>Current features:</b>
+  <br>
   1. Sign in to view your home timeline on the Profile screen
+  <br>
   2. Search user timelines on the Users screen (no sign in required)
+  <br>
   3. Search for keywords and topics on the Topics screen (no sign in required)
+  <br>
     On the Users and Topics screen, one can also select how many tweets that want to display.
   </p>
 </div>
