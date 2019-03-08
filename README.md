@@ -6,7 +6,16 @@
   <br>
   <h1>Twittverse</h1>
   <b>A desktop Twitter client using Electron, React, and Passport OAuth.</b>
+  <br>
   <img src="/imgs/Twittverse-0.3.0-1.png" height="300" width="200" />
   <img src="/imgs/Twittverse-0.3.0-2.png" height="300" width="200" />
   <img src="/imgs/Twittverse-0.3.0-3.png" height="300" width="200" />
+  
+  <p>
+  Current features:
+  1. Sign in to view your home timeline on the Profile screen
+  2. Search user timelines on the Users screen (no sign in required)
+  3. Search for keywords and topics on the Topics screen (no sign in required)
+    On the Users and Topics screen, one can also select how many tweets that want to display.
+  </p>
 </div>
