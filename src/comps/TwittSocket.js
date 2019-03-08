@@ -17,26 +17,29 @@ const defaultParams = {
 export default class TwittSocket extends React.Component {
   constructor(props) {
     super(props);
-    this.socket = io(API_URL);
-    this.state = {
-      user: null,
-      error: null,
-      timeline: null,
-      disabled: false,
-      login: this.startAuth.bind(this),
-      logout: this.resetState.bind(this),
-      search: this.search.bind(this),
-      getUserTweets: this.getUserTweets.bind(this)
-    };
 
+    this.socket = io(API_URL);
     this.getTwit = this.getTwit.bind(this);
     this.resetState = this.resetState.bind(this);
     this.getUserTweets = this.getUserTweets.bind(this);
+    this.search = this.search.bind(this);
     this.searchUser = this.searchUser.bind(this);
     this.setTimeline = this.setTimeline.bind(this);
     this.checkPopup = this.checkPopup.bind(this);
     this.openPopup = this.openPopup.bind(this);
     this.startAuth = this.startAuth.bind(this);
+
+    this.state = {
+      user: null,
+      error: null,
+      timeline: null,
+      disabled: false,
+      login: this.startAuth,
+      logout: this.resetState,
+      search: this.search,
+      searchUser: this.searchUser,
+      getUserTweets: this.getUserTweets
+    };
   }
 
   componentDidMount() {
@@ -78,19 +81,16 @@ export default class TwittSocket extends React.Component {
   }
 
   search(term, count) {
-    this.getTwit().get(
-      "search/tweets",
-      Object.assign({ q: term, count: count }, defaultParams),
-      this.setTimeline
-    );
+    let params = Object.assign({ q: term, count: count }, defaultParams);
+    this.getTwit().get("search/tweets", params, this.setTimeline);
   }
 
   searchUser(name, count) {
-    this.getTwit().get(
-      "search/tweets",
-      Object.assign({ screen_name: name, count: count }, defaultParams),
-      this.setTimeline
+    let params = Object.assign(
+      { screen_name: name, count: count },
+      defaultParams
     );
+    this.getTwit().get("statuses/user_timeline", params, this.setTimeline);
   }
 
   setTimeline(err, data, resp) {
@@ -99,7 +99,7 @@ export default class TwittSocket extends React.Component {
 
     if (err) {
       console.debug("Timeline", err);
-      this.setState({ error: err });
+      this.setState({ error: `Code ${err.code}: ${err.message}` });
     } else {
       this.setState(prevState => {
         // Compose the unique union of the old timeline and the new data

@@ -1,9 +1,8 @@
 import React from "react";
 import MUITheme from "../utils/theme";
 import { MuiThemeProvider, withStyles } from "@material-ui/core/styles";
-import AppBar from "./AppBar";
+import TopBar from "./TopBar";
 import UserCard from "./UserCard";
-import InputBar from "./InputBar";
 import SearchCard from "./SearchCard";
 
 const styles = {
@@ -23,15 +22,21 @@ class App extends React.Component {
     };
     this.headerButtons = [
       {
-        text: "User",
+        text: "Profile",
         onClick: () => {
-          this.show("User");
+          this.show("Profile");
         }
       },
       {
-        text: "Search Users",
+        text: "Users",
         onClick: () => {
-          this.show("Search Users");
+          this.show("Users");
+        }
+      },
+      {
+        text: "Topics",
+        onClick: () => {
+          this.show("Topics");
         }
       }
     ];
@@ -44,7 +49,6 @@ class App extends React.Component {
   }
 
   show(panel) {
-    console.log("Changing to", panel);
     this.setState({ showing: panel });
   }
   exitApp() {
@@ -57,18 +61,18 @@ class App extends React.Component {
   }
   render() {
     const { classes } = this.props;
+    const { showing } = this.state;
     return (
       <div className={classes.app}>
         <MuiThemeProvider theme={MUITheme}>
-          <AppBar
+          <TopBar
             headerButtons={this.headerButtons}
             onExit={this.exitApp}
             onMinimize={this.minimize}
           />
-          <UserCard showing={this.state.showing === "User" ? true : false} />
-          <SearchCard
-            showing={this.state.showing === "Search Users" ? true : false}
-          />
+          <UserCard showing={showing === "Profile"} />
+          <SearchCard user showing={showing === "Users"} />
+          <SearchCard showing={showing === "Topics"} />
         </MuiThemeProvider>
       </div>
     );

@@ -6,13 +6,13 @@ import {
   HorizontalGroup,
   VerticalGroup,
   UserPhoto,
-  TweetDivider,
   EmptyView,
   TweetButton,
   MiniButton,
   ButtonText,
   DisplayText
 } from "./TweetCardParts";
+import renderError from "./errorRenderer";
 import TweetList from "./TweetList";
 
 /**
@@ -32,26 +32,17 @@ function UserCard({ showing }) {
       <UserPhoto big src={bigImage(socket.user.profile.photos[0].value)} />
       <VerticalGroup>
         <DisplayText>{socket.user.profile.displayName}</DisplayText>
-        <TweetDivider />
         <MiniButton onClick={socket.logout}>
           <ButtonText>Logout</ButtonText>
         </MiniButton>
       </VerticalGroup>
-      <TweetDivider />
-    </HorizontalGroup>
-  );
-
-  const renderSocketError = error => (
-    <HorizontalGroup>
-      {/** String literal doesn't work here? */}
-      <DisplayText>{"Error: " + error.message}</DisplayText>
     </HorizontalGroup>
   );
 
   const renderUser = socket => (
     <UserCardView>
       {renderUserHeader(socket)}
-      {socket.error !== null && renderSocketError(socket.error)}
+      {socket.error !== null && renderError(socket.error)}
       {socket.timeline !== null && socket.timeline !== undefined && (
         <TweetList timeline={socket.timeline} />
       )}

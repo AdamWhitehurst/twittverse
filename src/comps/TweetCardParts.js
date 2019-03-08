@@ -45,7 +45,10 @@ const styles = theme => ({
     justifyContent: "center",
     alignItems: "center",
     padding: theme.spacing.unit,
-    width: 383
+    paddingLeft: 0,
+    marginLeft: theme.spacing.unit,
+    width: 375,
+    borderBottom: `1px solid ${theme.palette.secondary.dark}`
   },
   miniButton: {
     justifyContent: "center",
@@ -53,16 +56,15 @@ const styles = theme => ({
     textAlign: "center"
   },
   buttonText: {
-    background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${
+    background: `linear-gradient(45deg, ${theme.palette.primary.main} 10%, ${
       theme.palette.primary.dark
     } 90%)`,
     borderRadius: 0,
     border: 0,
     color: "white",
     padding: "1px 10px",
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)"
+    boxShadow: `0 3px 2px 1px ${theme.palette.primary.dark}50`
   },
-  divider: {},
   bigAvatar: {
     margin: 10,
     width: 60,
@@ -76,13 +78,12 @@ const styles = theme => ({
   },
   list: {
     width: "100%",
-    backgroundColor: theme.palette.background.paper,
     position: "relative",
     overflow: "scroll",
     maxHeight: "84vh"
   },
   input: {
-    paddingLeft: theme.spacing.unit,
+    padding: theme.spacing.unit,
     flexGrow: 1
   }
 });
@@ -111,9 +112,6 @@ export const UserPhoto = withStyles(styles)(({ src, big, classes }) =>
     <Avatar className={classes.smallAvatar} src={src} />
   )
 );
-export const TweetDivider = withStyles(styles)(({ classes }) => (
-  <Divider variant="fullWidth" />
-));
 
 export const UserCardView = withStyles(styles)(({ children, classes }) => (
   <Card square className={classes.userCard}>
@@ -174,15 +172,17 @@ export const DisplayTextSmall = withStyles(styles)(({ classes, children }) => (
   </Typography>
 ));
 
-export const Subtitle = withStyles(styles)(({ classes, children }) => (
-  <Typography variant="subtitle2">{children}</Typography>
-));
+export const Subtitle = withStyles(styles)(
+  ({ className, classes, children }) => (
+    <Typography className={className} variant="subtitle2">
+      {children}
+    </Typography>
+  )
+);
 
 export const TweetItem = withStyles(styles)(({ classes, children }) => (
   <ListItem className={classes.listItem}>{children}</ListItem>
 ));
 export const TweetItemList = withStyles(styles)(({ classes, children }) => (
-  <List className={classes.list} subheader={<TweetItem />}>
-    {children}
-  </List>
+  <List className={classes.list}>{children}</List>
 ));

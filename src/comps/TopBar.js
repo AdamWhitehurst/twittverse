@@ -28,6 +28,8 @@ const styles = theme => ({
   headerbar: {
     display: "flex",
     flexDirection: "row-reverse",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 0,
     minHeight: 0,
     maxHeight: 20,
@@ -54,8 +56,10 @@ const styles = theme => ({
   },
   headerButton: {
     WebkitAppRegion: "no-drag",
-    margin: 0,
-    padding: 0
+    margin: 8,
+    padding: 1,
+    paddingLeft: 3,
+    paddingRight: 3
   },
   headerText: {
     borderRadius: 0,

@@ -8,35 +8,46 @@ import {
   UserPhoto,
   DisplayTextSmall,
   Subtitle,
-  TweetText,
-  TweetDivider
+  TweetText
 } from "./TweetCardParts";
 
 function TweetList({ timeline }) {
+  const parseTweet = tweet => {
+    let parsedTweet = {
+      id: tweet.id,
+      text: textToHTMLLink(tweet.full_text || tweet.text)
+    };
+    if (tweet.retweeted) {
+      parsedTweet.img = bigImage(tweet.retweeted_status.user.profile_image_url);
+      parsedTweet.userName = tweet.retweeted_status.name;
+      parsedTweet.date = julianToDate(tweet.retweeted_status.created_at);
+    } else {
+      parsedTweet.img = bigImage(tweet.user.profile_image_url);
+      parsedTweet.userName = tweet.user.name;
+      parsedTweet.date = julianToDate(tweet.created_at);
+    }
+
+    return tweetToListItem(parsedTweet);
+  };
   const tweetToListItem = tweet => (
     // Parse tweet into a pretty.
     <TweetItem key={tweet.id}>
       <HorizontalGroup>
-        <UserPhoto src={bigImage(tweet.user.profile_image_url)} />
+        <UserPhoto src={tweet.img} />
         <VerticalGroup>
-          <DisplayTextSmall>{tweet.user.name}</DisplayTextSmall>
-          <Subtitle>{julianToDate(tweet.created_at)}</Subtitle>
+          <DisplayTextSmall>{tweet.userName}</DisplayTextSmall>
+          <Subtitle>{tweet.date}</Subtitle>
         </VerticalGroup>
       </HorizontalGroup>
       {/* Parse text of tweet into a pretty. */}
-      <TweetText>{textToHTMLLink(tweet.full_text)}</TweetText>
-      <TweetDivider />
+      <TweetText>{tweet.text}</TweetText>
     </TweetItem>
   );
 
   return (
     <TweetItemList>
       {// For each tweet, if retweeted, parse that instead.
-      timeline.map(tweet =>
-        tweet.retweeted
-          ? tweetToListItem(tweet.retweeted_status.user)
-          : tweetToListItem(tweet)
-      )}
+      timeline.map(parseTweet)}
     </TweetItemList>
   );
 }
