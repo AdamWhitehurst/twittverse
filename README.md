@@ -5,7 +5,7 @@
   <a href="https://material-ui.com/"><img src="https://material-ui.com/static/images/material-ui-logo.svg" height="96" width="96" /></a>
   <br>
   <h1>Twittverse</h1>
-  <b>A desktop Twitter client using Electron, React, and Passport OAuth.</b>
+  <b>A simple desktop Twitter client using Electron, React, and Passport.js</b>
   <br>
   <img src="/imgs/Twittverse-0.3.0-1.png" height="300" width="200" />
   <img src="/imgs/Twittverse-0.3.0-2.png" height="300" width="200" />
