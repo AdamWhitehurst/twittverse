@@ -5,5 +5,21 @@
   <a href="https://material-ui.com/"><img src="https://material-ui.com/static/images/material-ui-logo.svg" height="96" width="96" /></a>
   <br>
   <h1>Twittverse</h1>
-  <b>A desktop Twitter client using Electron, React, and Passport OAuth.</b>
+  <b>A simple desktop Twitter client using Electron, React, and Passport.js</b>
+  <br>
+  <img src="/imgs/Twittverse-0.3.0-1.png" height="300" width="200" />
+  <img src="/imgs/Twittverse-0.3.0-2.png" height="300" width="200" />
+  <img src="/imgs/Twittverse-0.3.0-3.png" height="300" width="200" />
+  
+  <p align="justify">
+  <b>Current features:</b>
+  <br>
+  1. Sign in to view your home timeline on the Profile screen
+  <br>
+  2. Search user timelines on the Users screen (no sign in required)
+  <br>
+  3. Search for keywords and topics on the Topics screen (no sign in required)
+  <br>
+    On the Users and Topics screen, one can also select how many tweets that want to display.
+  </p>
 </div>
