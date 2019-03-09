@@ -17,8 +17,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      showing: null,
-      user: null
+      showing: null
     };
     this.headerButtons = [
       {
@@ -40,12 +39,7 @@ class App extends React.Component {
         }
       }
     ];
-    this.setUser = this.setUser.bind(this);
     this.show = this.show.bind(this);
-  }
-
-  setUser(user) {
-    this.setState({ user: user });
   }
 
   show(panel) {

@@ -84,6 +84,7 @@ const styles = theme => ({
   },
   input: {
     padding: theme.spacing.unit,
+    paddingRight: theme.spacing.unit * 3,
     flexGrow: 1
   }
 });

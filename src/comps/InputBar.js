@@ -6,23 +6,7 @@ import {
   ButtonText,
   Input
 } from "./TweetCardParts";
-import { withStyles } from "@material-ui/core/styles";
 import { List, ListItem, Menu, MenuItem } from "@material-ui/core";
-
-const styles = theme => ({
-  headerButton: {
-    WebkitAppRegion: "no-drag",
-    margin: 0,
-    padding: 0
-  },
-  headerText: {
-    fontWeight: "bold",
-    color: theme.palette.primary.dark
-  },
-  inputBar: {
-    paddingRight: theme.spacing.unit * 3
-  }
-});
 
 const counts = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
@@ -53,14 +37,13 @@ class InputBar extends Component {
   }
 
   render() {
-    const { onComplete, classes } = this.props;
+    const { onComplete } = this.props;
     const { anchorEl, selectedIndex } = this.state;
     const menuText = "SELECT " + counts[selectedIndex] + " TWEETS";
     return (
       <VerticalGroup>
         <HorizontalGroup>
           <Input
-            className={classes.inputBar}
             onChange={event => {
               this.setState({ input: event.target.value });
             }}
@@ -108,4 +91,4 @@ class InputBar extends Component {
   }
 }
 
-export default withStyles(styles)(InputBar);
+export default InputBar;
