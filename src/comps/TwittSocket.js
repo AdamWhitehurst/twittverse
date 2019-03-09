@@ -14,70 +14,87 @@ const defaultParams = {
   tweet_mode: "extended"
 };
 
+const socket = io(API_URL);
+
 export default class TwittSocket extends React.Component {
   constructor(props) {
     super(props);
-
-    this.socket = io(API_URL);
     this.getTwit = this.getTwit.bind(this);
-    this.resetState = this.resetState.bind(this);
+    this.getAuthTwit = this.getAuthTwit.bind(this);
     this.getUserTweets = this.getUserTweets.bind(this);
     this.search = this.search.bind(this);
     this.searchUser = this.searchUser.bind(this);
     this.setTimeline = this.setTimeline.bind(this);
-    this.checkPopup = this.checkPopup.bind(this);
-    this.openPopup = this.openPopup.bind(this);
-    this.startAuth = this.startAuth.bind(this);
+    this.tweet = this.tweet.bind(this);
+    this.notify = this.notify.bind(this);
 
     this.state = {
-      user: null,
+      io: socket,
       error: null,
       timeline: null,
-      disabled: false,
-      login: this.startAuth,
-      logout: this.resetState,
       search: this.search,
       searchUser: this.searchUser,
-      getUserTweets: this.getUserTweets
+      getUserTweets: this.getUserTweets,
+      tweet: this.tweet
     };
   }
 
-  componentDidMount() {
-    this.socket.on("twitter", user => {
-      this.popup.close();
-      this.setState({ user }, this.getUserTweets);
-    });
-  }
-
-  resetState() {
-    this.setState({
-      user: null,
-      timeline: null,
-      error: null
-    });
-  }
-
   getTwit() {
-    let at = this.state.user ? this.state.user.accessToken : ACCESS_TOKEN;
-    let ts = this.state.user
-      ? this.state.user.tokenSecret
-      : ACCESS_TOKEN_SECRET;
-
     return new Twit({
       consumer_key: TWITTER_KEY,
       consumer_secret: TWITTER_SECRET,
-      access_token: at,
-      access_token_secret: ts,
+      access_token: ACCESS_TOKEN,
+      access_token_secret: ACCESS_TOKEN_SECRET,
       timeout_ms: 60 * 1000
     });
   }
 
-  getUserTweets() {
-    this.getTwit().get(
+  getAuthTwit(accessToken, tokenSecret) {
+    if (accessToken === undefined || tokenSecret === undefined) {
+      console.debug(
+        `Missing: accessToken ${accessToken}, tokenSecret ${tokenSecret})`
+      );
+      return this.getTwit();
+    }
+
+    return new Twit({
+      consumer_key: TWITTER_KEY,
+      consumer_secret: TWITTER_SECRET,
+      access_token: accessToken,
+      access_token_secret: tokenSecret,
+      timeout_ms: 60 * 1000
+    });
+  }
+
+  getUserTweets(at, ts) {
+    this.getAuthTwit(at, ts).get(
       "statuses/home_timeline",
       defaultParams,
       this.setTimeline
     );
+  }
+
+  tweet(at, ts, msg) {
+    console.debug("Sending tweet msg:", msg);
+    this.getAuthTwit(at, ts).post(
+      "statuses/update",
+      { status: msg },
+      this.notify
+    );
+  }
+
+  notify(err, data, resp) {
+    console.debug("Data", data);
+    if (err) {
+      console.debug("Notify", err);
+      this.setState({ error: `Code ${err.code}: ${err.message}` });
+    } else {
+      this.setState({ error: null });
+
+      setInterval(() => {
+        this.setState({ notification: null });
+      }, 2000);
+    }
   }
 
   search(term, count) {
@@ -118,41 +135,8 @@ export default class TwittSocket extends React.Component {
     }
   }
 
-  checkPopup() {
-    const check = setInterval(() => {
-      const { popup } = this;
-      if (!popup || popup.closed || popup.closed === undefined) {
-        clearInterval(check);
-        this.setState({ disabled: false });
-      }
-    }, 1000);
-  }
-
-  openPopup(url) {
-    const width = 400,
-      height = 300;
-    const left = window.innerWidth / 2;
-    const top = window.innerHeight / 2;
-    return window.open(
-      url,
-      "",
-      `location=no, directories=no, status=no, menubar=no,
-      scrollbars=no, resizable=no, copyhistory=no, width=${width}, 
-      height=${height}, top=${top}, left=${left}`
-    );
-  }
-
-  startAuth(e) {
-    if (!this.state.disabled) {
-      e.preventDefault();
-      const url = `${API_URL}/twitter?socketId=${this.socket.id}`;
-      this.popup = this.openPopup(url);
-      this.checkPopup();
-      this.setState({ disabled: true });
-    }
-  }
-
   render() {
+    // Basic render prop pattern
     return <div>{this.props.render(this.state)}</div>;
   }
 }

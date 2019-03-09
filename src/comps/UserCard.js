@@ -14,50 +14,57 @@ import {
 } from "./TweetCardParts";
 import renderError from "./errorRenderer";
 import TweetList from "./TweetList";
+import TwittUser from "./TwittUser";
 
 /**
  * @function`Renders a card which allows a user to sign into a Twitter account`
  */
 function UserCard({ showing }) {
-  const renderLoginButton = socket => (
+  const renderLoginButton = user => (
     <EmptyView>
-      <TweetButton onClick={socket.login}>
+      <TweetButton onClick={user.login}>
         <ButtonText>Connect Account</ButtonText>
       </TweetButton>
     </EmptyView>
   );
 
-  const renderUserHeader = socket => (
+  const renderUserHeader = user => (
     <HorizontalGroup>
-      <UserPhoto big src={bigImage(socket.user.profile.photos[0].value)} />
+      <UserPhoto big src={bigImage(user.profile.photos[0].value)} />
       <VerticalGroup>
-        <DisplayText>{socket.user.profile.displayName}</DisplayText>
-        <MiniButton onClick={socket.logout}>
-          <ButtonText>Logout</ButtonText>
-        </MiniButton>
+        <DisplayText>{user.profile.displayName}</DisplayText>
+        <HorizontalGroup>
+          <MiniButton onClick={user.getTimeline}>
+            <ButtonText>Refresh</ButtonText>
+          </MiniButton>
+          <MiniButton onClick={user.toggleTweetBar}>
+            <ButtonText>{user.tweeting ? "Close" : "Tweet"}</ButtonText>
+          </MiniButton>
+          <MiniButton onClick={user.logout}>
+            <ButtonText>Logout</ButtonText>
+          </MiniButton>
+        </HorizontalGroup>
       </VerticalGroup>
     </HorizontalGroup>
   );
 
-  const renderUser = socket => (
+  const renderUser = user => (
     <UserCardView>
-      {renderUserHeader(socket)}
-      {socket.error !== null && renderError(socket.error)}
-      {socket.timeline !== null && socket.timeline !== undefined && (
-        <TweetList timeline={socket.timeline} />
-      )}
+      {renderUserHeader(user)}
+      {user.renderTweetBar()}
+      {user.socket.error && renderError(user.socket.error)}
+      {user.socket.notification && renderError(user.socket.notification)}
+      {user.socket.timeline && <TweetList timeline={user.socket.timeline} />}
     </UserCardView>
   );
 
   return (
-    <TwittSocket
-      render={socket => {
+    <TwittUser
+      render={user => {
         if (showing === true) {
-          // If !socket.user, user has not signed in
-          // So render login button
-          return socket.user !== null
-            ? renderUser(socket)
-            : renderLoginButton(socket);
+          return user.auth !== null
+            ? renderUser(user)
+            : renderLoginButton(user);
         }
       }}
     />
