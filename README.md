@@ -12,9 +12,9 @@
   <img src="/imgs/Twittverse-0.3.0-3.png" height="300" width="200" />
   
   <p align="justify">
-  <b>Current features:</b>
+  <b>Features</b>
   <br>
-  1. Sign in to view your home timeline on the Profile screen
+  1. Sign in to view your home timeline and post tweets
   <br>
   2. Search user timelines on the Users screen (no sign in required)
   <br>
