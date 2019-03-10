@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MUITheme from "../utils/theme";
 import { MuiThemeProvider, withStyles } from "@material-ui/core/styles";
 import TopBar from "./TopBar";
@@ -13,64 +13,54 @@ const styles = {
   }
 };
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      showing: null
-    };
-    this.headerButtons = [
-      {
-        text: "Profile",
-        onClick: () => {
-          this.show("Profile");
-        }
-      },
-      {
-        text: "Users",
-        onClick: () => {
-          this.show("Users");
-        }
-      },
-      {
-        text: "Topics",
-        onClick: () => {
-          this.show("Topics");
-        }
-      }
-    ];
-    this.show = this.show.bind(this);
-  }
+const App = ({ classes }) => {
+  const [showing, setShowing] = useState("Profile");
 
-  show(panel) {
-    this.setState({ showing: panel });
-  }
-  exitApp() {
+  const exitApp = () => {
     window.close();
-  }
-  minimize() {
+  };
+
+  const minimize = () => {
     require("electron")
       .remote.BrowserWindow.getFocusedWindow()
       .minimize();
-  }
-  render() {
-    const { classes } = this.props;
-    const { showing } = this.state;
-    return (
-      <div className={classes.app}>
-        <MuiThemeProvider theme={MUITheme}>
-          <TopBar
-            headerButtons={this.headerButtons}
-            onExit={this.exitApp}
-            onMinimize={this.minimize}
-          />
-          <UserCard showing={showing === "Profile"} />
-          <SearchCard user showing={showing === "Users"} />
-          <SearchCard showing={showing === "Topics"} />
-        </MuiThemeProvider>
-      </div>
-    );
-  }
-}
+  };
+
+  const headerButtons = [
+    {
+      text: "Profile",
+      onClick: () => {
+        setShowing("Profile");
+      }
+    },
+    {
+      text: "Users",
+      onClick: () => {
+        setShowing("Users");
+      }
+    },
+    {
+      text: "Topics",
+      onClick: () => {
+        setShowing("Topics");
+      }
+    }
+  ];
+
+  return (
+    <div className={classes.app}>
+      <MuiThemeProvider theme={MUITheme}>
+        <TopBar
+          headerButtons={headerButtons}
+          onExit={exitApp}
+          onMinimize={minimize}
+        />
+        <UserCard showing={showing === "Profile"} />
+        <SearchCard user showing={showing === "Users"} />
+        <SearchCard showing={showing === "Topics"} />
+      </MuiThemeProvider>
+    </div>
+  );
+};
 
 export default withStyles(styles)(App);
