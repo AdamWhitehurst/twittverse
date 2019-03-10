@@ -21,5 +21,28 @@
   3. Search for keywords and topics on the Topics screen (no sign in required)
   <br>
     On the Users and Topics screen, one can also select how many tweets that want to display.
+  
+  <b> Building </b>
+  <br>
+  This app requires a ```config.js``` file to be placed within the ```src/lib/``` folder, (as well as a Twitter developer app so one can obtain a   twitter API consumer key, consumer secret, access token, and access secret.)[https://developer.twitter.com/en/apps] The consumer key and secret are used to allow for application-user authentication, which means the app is able to allow users to sign in using the user's credentials and have the app post and recieve timelines as that user. Likewise, the access token and secret are used to allow the app to search topics and timelines for itself.
+  The contents of ```config.js``` should be:
+  ```javscript
+  export const PORT = 8080;
+  export const CALLBACK_URL = `http://127.0.0.1:${PORT}/twitter/callback`;
+  export const TWITTER_KEY = "<YOUR CONSUMER KEY>";
+  export const TWITTER_SECRET = "<YOUR CONSUMER SECRET>";
+  export const ACCESS_TOKEN = "<YOUR ACCESS TOKEN>";
+  export const ACCESS_TOKEN_SECRET = "<YOUR ACCESS TOKEN SECRET>";
+  export const SESSION_SECRET = "TheSecretIsBaldBunnies";
+  export const API_URL = `http://127.0.0.1:${PORT}`;
+
+  export const TWITTER_CONFIG = {
+  consumerKey: TWITTER_KEY,
+  consumerSecret: TWITTER_SECRET,
+  callbackURL: CALLBACK_URL
+  };
+  ```
+  With your respective keys and secrets inserted, of course.
   </p>
+  
 </div>
