@@ -10,7 +10,7 @@
   <img src="/imgs/Twittverse-0.3.0-1.png" height="300" width="200" />
   <img src="/imgs/Twittverse-0.3.0-2.png" height="300" width="200" />
   <img src="/imgs/Twittverse-0.3.0-3.png" height="300" width="200" />
-  
+    </p>
   <p align="justify">
   <b>Features</b>
   <br>
@@ -43,6 +43,5 @@
   };
   ```
   With your respective keys and secrets inserted, of course.
-  </p>
   
 </div>
