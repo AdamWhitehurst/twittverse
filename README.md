@@ -24,7 +24,7 @@
   
   <b> Building </b>
   <br>
-  This app requires a ```config.js``` file to be placed within the ```src/lib/``` folder, (as well as a Twitter developer app so one can obtain a   twitter API consumer key, consumer secret, access token, and access secret.)[https://developer.twitter.com/en/apps] The consumer key and secret are used to allow for application-user authentication, which means the app is able to allow users to sign in using the user's credentials and have the app post and recieve timelines as that user. Likewise, the access token and secret are used to allow the app to search topics and timelines for itself.
+  This app requires a ```config.js``` file to be placed within the ```src/lib/``` folder, [as well as a Twitter developer app so one can obtain a   twitter API consumer key, consumer secret, access token, and access secret.](https://developer.twitter.com/en/apps) The consumer key and secret are used to allow for application-user authentication, which means the app is able to allow users to sign in using the user's credentials and have the app post and recieve timelines as that user. Likewise, the access token and secret are used to allow the app to search topics and timelines for itself.
   The contents of ```config.js``` should be:
   ```javscript
   export const PORT = 8080;
