@@ -42,7 +42,7 @@
   callbackURL: CALLBACK_URL
   };
   ```
-  With your respective keys and secrets inserted, of course.<br>
+  With your respective keys and secrets inserted, of course.<br><br><br>
 <b>Design Goals</b><br>
   This week-long was built with the intention of experimenting with web technologies within native applications. Moreover, it was excellent introductions to OAuth2 protocol. The necessary features are those listed above, as well as being to drag, drop, minimize, and run multiple windows at once. These features are a given in a native application, with the last being a tricky procedure due to the need for simulating one-and-only-one "backend server" for the passport authentication. However, this also makes it easy to extend the functionality to store and retrieve saved user sessions using a mongoDB server, if you so have one.<br>
  <b> Implementation Details </b><br>
